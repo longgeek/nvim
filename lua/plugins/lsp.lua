@@ -1,0 +1,101 @@
+return {
+  {
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      { "williamboman/mason.nvim", config = true },
+      "williamboman/mason-lspconfig.nvim",
+      "hrsh7th/cmp-nvim-lsp",
+    },
+    config = function()
+      -- 诊断外观
+      vim.diagnostic.config({
+        virtual_text = true,
+        severity_sort = true,
+        float = { border = "rounded" },
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = "✘",
+            [vim.diagnostic.severity.WARN] = "▲",
+            [vim.diagnostic.severity.INFO] = "»",
+            [vim.diagnostic.severity.HINT] = "⚑",
+          },
+        },
+      })
+
+      -- 让所有 server 带上 cmp 的补全能力
+      local caps = vim.lsp.protocol.make_client_capabilities()
+      local ok_cmp, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+      if ok_cmp then
+        caps = vim.tbl_deep_extend("force", caps, cmp_lsp.default_capabilities())
+      end
+      vim.lsp.config("*", { capabilities = caps })
+
+      -- server 特定设置
+      vim.lsp.config("lua_ls", {
+        settings = {
+          Lua = {
+            runtime = { version = "LuaJIT" },
+            workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } },
+            diagnostics = { globals = { "vim" } },
+            telemetry = { enable = false },
+          },
+        },
+      })
+      vim.lsp.config("basedpyright", {
+        settings = { basedpyright = { analysis = { typeCheckingMode = "standard" } } },
+      })
+
+      -- mason 自动安装并启用 (mason-lspconfig v2 会 vim.lsp.enable)
+      -- basedpyright/ruff/sqls 用系统包管理器装 (见 DESIGN.md「安装」), 下方手动启用
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "lua_ls", "ts_ls", "eslint", "bashls", "jsonls", "yamlls",
+        },
+      })
+
+      -- 系统包管理器装的 server, 手动启用 (binary 在 PATH)
+      vim.lsp.enable({ "basedpyright", "ruff" })
+
+      -- sqls (SQL LSP) 装到 ~/go/bin 后自动启用。安装:
+      --   GOPROXY=https://goproxy.cn,direct go install github.com/sqls-server/sqls@latest
+      local sqls_bin = vim.fn.expand("~/go/bin/sqls")
+      if vim.uv.fs_stat(sqls_bin) then
+        vim.lsp.config("sqls", { cmd = { sqls_bin } })
+        vim.lsp.enable("sqls")
+      end
+
+      -- buffer 级 LSP 键位
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("my_lsp_attach", { clear = true }),
+        callback = function(ev)
+          -- 0.11 默认在 gr 前缀挂了 grn/gra/grr/gri, 删掉腾出干净的 gd/gr/gi
+          for _, k in ipairs({ "grn", "gra", "grr", "gri" }) do
+            pcall(vim.keymap.del, "n", k, { buffer = ev.buf })
+          end
+          local function map(keys, fn, desc, mode)
+            vim.keymap.set(mode or "n", keys, fn, { buffer = ev.buf, desc = "LSP: " .. desc })
+          end
+          map("gd", "<cmd>Telescope lsp_definitions<CR>", "定义")
+          map("gr", "<cmd>Telescope lsp_references<CR>", "引用")
+          map("gi", "<cmd>Telescope lsp_implementations<CR>", "实现")
+          map("gy", "<cmd>Telescope lsp_type_definitions<CR>", "类型定义")
+          map("K", vim.lsp.buf.hover, "悬浮文档")
+          map("<leader>cr", vim.lsp.buf.rename, "重命名符号")
+          map("<leader>ca", vim.lsp.buf.code_action, "code action", { "n", "x" })
+          map("<leader>cs", "<cmd>Telescope lsp_document_symbols<CR>", "文档符号")
+        end,
+      })
+    end,
+  },
+
+  -- 非 LSP 的格式化器/linter 由 mason 统一安装
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    event = "VeryLazy",
+    opts = {
+      ensure_installed = { "stylua", "prettierd", "shfmt", "shellcheck", "debugpy" },
+    },
+  },
+}
