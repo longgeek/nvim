@@ -34,6 +34,7 @@ return {
     event = "VeryLazy",
     opts = {
       preset = "helix",
+      win = { border = "rounded" },
       spec = {
         { "<leader>f", group = "查找 (find)" },
         { "<leader>g", group = "git" },

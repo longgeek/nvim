@@ -11,21 +11,12 @@ return {
     },
   },
 
-  -- buffer 内实时渲染 markdown (无浏览器); 当前字体非 Nerd Font, 图标用纯文本/unicode 代替
+  -- buffer 内实时渲染 markdown (无浏览器, Nerd Font 默认图标)
   {
     "MeanderingProgrammer/render-markdown.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
     ft = { "markdown" },
-    opts = {
-      sign = { enabled = false },
-      heading = { icons = { "# ", "## ", "### ", "#### ", "##### ", "###### " } },
-      bullet = { icons = { "•", "◦", "▪", "▫" } },
-      checkbox = {
-        unchecked = { icon = "[ ] " },
-        checked = { icon = "[x] " },
-      },
-      dash = { icon = "─" },
-    },
+    opts = {},
     keys = {
       { "<leader>mr", "<cmd>RenderMarkdown toggle<CR>", ft = "markdown", desc = "Markdown buffer 内渲染开关" },
     },
