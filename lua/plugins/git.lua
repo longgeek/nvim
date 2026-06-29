@@ -4,6 +4,10 @@ return {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     opts = {
+      -- 光标所在行行尾淡显: 谁、何时、提交说明 (GitLens 风格)
+      current_line_blame = true,
+      current_line_blame_opts = { delay = 300, virt_text_pos = "eol", ignore_whitespace = true },
+      current_line_blame_formatter = "  <author>, <author_time:%Y-%m-%d> · <summary>",
       on_attach = function(buf)
         local gs = require("gitsigns")
         local function map(l, r, desc)
@@ -14,8 +18,9 @@ return {
         map("<leader>hs", gs.stage_hunk, "stage hunk")
         map("<leader>hr", gs.reset_hunk, "reset hunk")
         map("<leader>hp", gs.preview_hunk, "预览 hunk")
-        map("<leader>hb", function() gs.blame_line({ full = true }) end, "行 blame")
-        map("<leader>gb", function() gs.blame_line({ full = true }) end, "行 blame")
+        map("<leader>hb", function() gs.blame_line({ full = true }) end, "行 blame (弹窗)")
+        map("<leader>gb", function() gs.blame_line({ full = true }) end, "行 blame (弹窗)")
+        map("<leader>gB", "<cmd>Gitsigns toggle_current_line_blame<CR>", "切换行尾 blame")
       end,
     },
   },
