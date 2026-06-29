@@ -6,6 +6,7 @@ return {
       { "williamboman/mason.nvim", config = true },
       "williamboman/mason-lspconfig.nvim",
       "hrsh7th/cmp-nvim-lsp",
+      "b0o/SchemaStore.nvim", -- package.json/tsconfig/Actions 等的 JSON/YAML schema 目录
     },
     config = function()
       -- 诊断外观
@@ -62,6 +63,20 @@ return {
               includeInlayVariableTypeHints = true,
               includeInlayFunctionLikeReturnTypeHints = true,
             },
+          },
+        },
+      })
+      -- jsonls/yamlls 挂 SchemaStore: package.json/tsconfig/.eslintrc/Actions 自动补全+校验
+      vim.lsp.config("jsonls", {
+        settings = {
+          json = { schemas = require("schemastore").json.schemas(), validate = { enable = true } },
+        },
+      })
+      vim.lsp.config("yamlls", {
+        settings = {
+          yaml = {
+            schemaStore = { enable = false, url = "" }, -- 关掉内置, 改用 SchemaStore.nvim
+            schemas = require("schemastore").yaml.schemas(),
           },
         },
       })

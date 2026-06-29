@@ -42,9 +42,12 @@ return {
         { "<leader>c", group = "code" },
         { "<leader>d", group = "调试 (debug)" },
         { "<leader>b", group = "buffer" },
-        { "<leader>s", group = "分屏 (split)" },
+        { "<leader>s", group = "分屏 / 搜替" },
         { "<leader>x", group = "诊断 (diagnostics)" },
         { "<leader>m", group = "markdown" },
+        { "<leader>t", group = "测试 (test)" },
+        { "<leader>R", group = "REST (http)" },
+        { "<leader>D", desc = "数据库 UI (dadbod)" },
       },
     },
     keys = {

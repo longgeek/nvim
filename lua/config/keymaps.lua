@@ -16,7 +16,7 @@ map("n", "<leader>q", "<cmd>quit<CR>", { desc = "关窗口" })
 -- buffer 切换 (H/L 已占行首尾, 故用 Tab)
 map("n", "<Tab>", "<cmd>bnext<CR>", { desc = "下个 buffer" })
 map("n", "<S-Tab>", "<cmd>bprevious<CR>", { desc = "上个 buffer" })
-map("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "关闭 buffer" })
+-- <leader>bd 关 buffer 交给 mini.bufremove (删 buffer 留窗口布局), 见 plugins/editing.lua
 
 -- 分屏 (跨窗格移动由 vim-tmux-navigator 接管 C-h/j/k/l)
 map("n", "<leader>sv", "<cmd>vsplit<CR>", { desc = "竖直分屏" })
