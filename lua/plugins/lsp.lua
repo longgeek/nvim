@@ -38,12 +38,32 @@ return {
             runtime = { version = "LuaJIT" },
             workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } },
             diagnostics = { globals = { "vim" } },
+            hint = { enable = true }, -- inlay hints
             telemetry = { enable = false },
           },
         },
       })
       vim.lsp.config("basedpyright", {
         settings = { basedpyright = { analysis = { typeCheckingMode = "standard" } } },
+      })
+      -- ts_ls inlay hints 默认关, 显式打开
+      vim.lsp.config("ts_ls", {
+        settings = {
+          typescript = {
+            inlayHints = {
+              includeInlayParameterNameHints = "all",
+              includeInlayVariableTypeHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+            },
+          },
+          javascript = {
+            inlayHints = {
+              includeInlayParameterNameHints = "all",
+              includeInlayVariableTypeHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+            },
+          },
+        },
       })
 
       -- mason 自动安装并启用 (mason-lspconfig v2 会 vim.lsp.enable)
@@ -84,6 +104,15 @@ return {
           map("<leader>cr", vim.lsp.buf.rename, "重命名符号")
           map("<leader>ca", vim.lsp.buf.code_action, "code action", { "n", "x" })
           map("<leader>cs", "<cmd>Telescope lsp_document_symbols<CR>", "文档符号")
+
+          -- inlay hints: 行内显示推断的类型/参数名 (支持的 server 自动开)
+          local client = vim.lsp.get_client_by_id(ev.data.client_id)
+          if client and client:supports_method("textDocument/inlayHint") then
+            vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+          end
+          map("<leader>ci", function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = ev.buf }), { bufnr = ev.buf })
+          end, "切换 inlay hints")
         end,
       })
     end,
@@ -96,6 +125,20 @@ return {
     event = "VeryLazy",
     opts = {
       ensure_installed = { "stylua", "prettierd", "shfmt", "shellcheck", "debugpy" },
+    },
+  },
+
+  -- 诊断/quickfix/符号 面板 (逐条扫错)
+  {
+    "folke/trouble.nvim",
+    cmd = "Trouble",
+    opts = {},
+    keys = {
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "诊断面板 (Trouble)" },
+      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "本 buffer 诊断" },
+      { "<leader>xs", "<cmd>Trouble symbols toggle<cr>", desc = "符号大纲" },
+      { "<leader>xq", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix" },
+      { "<leader>xl", "<cmd>Trouble loclist toggle<cr>", desc = "Loclist" },
     },
   },
 }

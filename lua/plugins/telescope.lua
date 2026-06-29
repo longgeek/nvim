@@ -15,7 +15,6 @@ return {
       { "<leader>fw", "<cmd>Telescope grep_string<CR>", desc = "搜光标下的词" },
       { "<leader>fk", "<cmd>Telescope keymaps<CR>", desc = "查找快捷键 (可搜/上下选/回车执行)" },
       { "<leader>/", "<cmd>Telescope current_buffer_fuzzy_find<CR>", desc = "当前 buffer 搜行" },
-      { "<leader>xx", "<cmd>Telescope diagnostics<CR>", desc = "诊断列表" },
     },
     opts = {
       defaults = {

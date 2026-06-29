@@ -52,4 +52,11 @@ return {
       map({ "n", "x", "o" }, "[[", function() move.goto_previous_start("@class.outer", "textobjects") end, { desc = "上一个类" })
     end,
   },
+
+  -- 滚动时顶部固定显示当前函数/类 (sticky context)
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = { max_lines = 3, multiline_threshold = 1 },
+  },
 }

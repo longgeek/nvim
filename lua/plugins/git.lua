@@ -29,4 +29,14 @@ return {
       { "<leader>gl", "<cmd>Git log --oneline<CR>", desc = "Git log" },
     },
   },
+
+  -- lazygit 浮窗 (需系统装好 lazygit)
+  {
+    "kdheepak/lazygit.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = { "LazyGit", "LazyGitConfig", "LazyGitCurrentFile" },
+    keys = {
+      { "<leader>gz", "<cmd>LazyGit<CR>", desc = "lazygit 浮窗" },
+    },
+  },
 }
