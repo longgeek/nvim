@@ -1,13 +1,13 @@
 return {
-  -- 主题 (换主题: 改这里 style 或换插件 + 下面 colorscheme 名)
+  -- 主题: 跟 Ghostty 的 "GitHub Dark Dimmed" 保持一致 (同源 GitHub Primer 调色板)
   {
-    "folke/tokyonight.nvim",
+    "projekt0n/github-nvim-theme",
+    name = "github-theme",
     lazy = false,
     priority = 1000,
-    opts = { style = "night" },
-    config = function(_, opts)
-      require("tokyonight").setup(opts)
-      vim.cmd.colorscheme("tokyonight")
+    config = function()
+      require("github-theme").setup({})
+      vim.cmd.colorscheme("github_dark_dimmed")
     end,
   },
 
@@ -20,7 +20,7 @@ return {
     event = "VeryLazy",
     opts = {
       options = {
-        theme = "tokyonight",
+        theme = "auto",
         globalstatus = true,
         component_separators = "|",
         section_separators = "",
