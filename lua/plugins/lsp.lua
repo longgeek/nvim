@@ -86,6 +86,7 @@ return {
       require("mason-lspconfig").setup({
         ensure_installed = {
           "lua_ls", "ts_ls", "eslint", "bashls", "jsonls", "yamlls",
+          "emmet_language_server", -- Emmet 缩写展开 (html/css/jsx/tsx/vue)
         },
       })
 

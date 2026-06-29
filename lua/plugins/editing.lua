@@ -77,5 +77,30 @@ return {
     },
   },
 
+  -- 行内预览颜色码 (hex/rgb/hsl/CSS 命名色/Tailwind), 写 CSS/JSX 直接看到真实颜色
+  {
+    "catgoose/nvim-colorizer.lua",
+    event = { "BufReadPost", "BufNewFile" },
+    main = "colorizer",
+    opts = {
+      user_default_options = { names = false, css = true, tailwind = "both" },
+    },
+  },
+
+  -- 剪贴板历史: 复制过的内容存环, <leader>fy 用 telescope 翻历史
+  {
+    "gbprod/yanky.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim" },
+    event = "VeryLazy",
+    opts = {},
+    config = function(_, opts)
+      require("yanky").setup(opts)
+      pcall(function() require("telescope").load_extension("yank_history") end)
+    end,
+    keys = {
+      { "<leader>fy", "<cmd>Telescope yank_history<cr>", desc = "剪贴板历史" },
+    },
+  },
+
   -- 注释用 nvim 0.10+ 内置 gc / gcc / gbc, 无需插件
 }

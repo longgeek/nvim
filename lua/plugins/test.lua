@@ -7,11 +7,13 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "nvim-neotest/neotest-python", -- Python (pytest/unittest)
+      "marilari88/neotest-vitest", -- JS/TS (vitest)
     },
     config = function()
       require("neotest").setup({
         adapters = {
           require("neotest-python")({ dap = { justMyCode = false } }),
+          require("neotest-vitest"),
         },
       })
     end,
