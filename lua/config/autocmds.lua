@@ -11,20 +11,23 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- 重新打开文件时恢复上次光标位置
-vim.api.nvim_create_autocmd("BufReadPost", {
-  group = augroup("last_loc"),
-  callback = function(ev)
-    local exclude = { "gitcommit" }
-    if vim.tbl_contains(exclude, vim.bo[ev.buf].filetype) then
-      return
-    end
-    local mark = vim.api.nvim_buf_get_mark(ev.buf, '"')
-    local lcount = vim.api.nvim_buf_line_count(ev.buf)
-    if mark[1] > 0 and mark[1] <= lcount then
-      pcall(vim.api.nvim_win_set_cursor, 0, mark)
-    end
-  end,
-})
+-- Cursor/VSCode 下跳过: 光标由 Cursor 管理, 强设会因行数不同步越界 (hjkl 卡死)
+if not vim.g.vscode then
+  vim.api.nvim_create_autocmd("BufReadPost", {
+    group = augroup("last_loc"),
+    callback = function(ev)
+      local exclude = { "gitcommit" }
+      if vim.tbl_contains(exclude, vim.bo[ev.buf].filetype) then
+        return
+      end
+      local mark = vim.api.nvim_buf_get_mark(ev.buf, '"')
+      local lcount = vim.api.nvim_buf_line_count(ev.buf)
+      if mark[1] > 0 and mark[1] <= lcount then
+        pcall(vim.api.nvim_win_set_cursor, 0, mark)
+      end
+    end,
+  })
+end
 
 -- 辅助/临时窗口用 q 关闭
 vim.api.nvim_create_autocmd("FileType", {
