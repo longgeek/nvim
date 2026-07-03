@@ -23,11 +23,36 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Cursor / VSCode Neovim 下: 只加载"编辑类"插件, UI/LSP/调试交给 Cursor
+local in_vscode = vim.g.vscode ~= nil
+local vscode_allow = {
+  ["which-key.nvim"] = true,   -- leader 面板
+  ["mini.surround"] = true,
+  ["mini.pairs"] = true,
+  ["mini.ai"] = true,
+  ["flash.nvim"] = true,       -- s 跳转
+  ["vim-visual-multi"] = true, -- 多光标
+  ["mini.bufremove"] = true,
+  ["undotree"] = true,
+  ["todo-comments.nvim"] = true,
+  ["plenary.nvim"] = true,     -- todo-comments 依赖
+}
+
 -- 自动 import lua/plugins/ 下所有插件规格
 require("lazy").setup({
   spec = { { import = "plugins" } },
+  defaults = {
+    cond = in_vscode and function(plugin)
+      return vscode_allow[plugin.name] == true
+    end or nil,
+  },
   install = { colorscheme = { "tokyonight", "habamax" } },
   checker = { enabled = false },             -- 不自动检查插件更新
   change_detection = { notify = false },
   rocks = { enabled = false },               -- 不用 luarocks, 免去外部依赖
 })
+
+-- Cursor 专用键位 (调试/查找走 Cursor 命令)
+if in_vscode then
+  require("config.vscode")
+end
