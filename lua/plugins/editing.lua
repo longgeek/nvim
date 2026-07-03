@@ -22,7 +22,8 @@ return {
     event = "VeryLazy",
     opts = {},
     keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash 跳转" },
+      -- s 不含 x: 保留 visual (含 Ctrl-V 块) 里内置的 s 替换; flash 跳转仍在 n/o 模式可用
+      { "s", mode = { "n", "o" }, function() require("flash").jump() end, desc = "Flash 跳转" },
       { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash treesitter" },
     },
   },
