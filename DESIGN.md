@@ -68,7 +68,9 @@ mason 自动安装并启用: `lua_ls`、`ts_ls`、`eslint`、`bashls`、`jsonls`
 | `<leader>gg` | Git (fugitive) | `<leader>cf` | 格式化 |
 | `<leader>hs`/`hr` | stage/reset hunk | `]c`/`[c` | 上/下 git hunk |
 | `<leader>db`/`dc` | 断点/继续 | `<leader>du` | DAP UI |
-| `s` | flash 跳转 | `<leader>mp` | Markdown 预览 |
+| `<leader>j` | flash 跳转 | `<leader>mp` | Markdown 预览 |
+
+`s` 保持原生 substitute (normal + Ctrl-V 块选均删字进插入); flash 跳转故意让出 `s`,挪到 `<leader>j`。`S` 仍为 flash-treesitter 选区。
 
 按 `<leader>` 由 which-key 弹出全部可用键。
 
