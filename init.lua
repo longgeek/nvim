@@ -25,13 +25,13 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Cursor / VSCode Neovim 下: 只加载"编辑类"插件, UI/LSP/调试交给 Cursor
 local in_vscode = vim.g.vscode ~= nil
+-- 注: flash.nvim / vim-visual-multi 会移动光标, 在 vscode-neovim 下与 Cursor
+-- 行数不同步会触发 "Invalid cursor line: out of range" 并卡死 hjkl, 故不加载;
+-- Cursor 自带跳转(Cmd+点击/多光标 Cmd+D)替代。
 local vscode_allow = {
-  ["which-key.nvim"] = true,   -- leader 面板
   ["mini.surround"] = true,
   ["mini.pairs"] = true,
   ["mini.ai"] = true,
-  ["flash.nvim"] = true,       -- s 跳转
-  ["vim-visual-multi"] = true, -- 多光标
   ["mini.bufremove"] = true,
   ["undotree"] = true,
   ["todo-comments.nvim"] = true,
