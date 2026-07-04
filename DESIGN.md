@@ -72,6 +72,8 @@ mason 自动安装并启用: `lua_ls`、`ts_ls`、`eslint`、`bashls`、`jsonls`
 
 `s` 保持原生 substitute (normal + Ctrl-V 块选均删字进插入); flash 跳转故意让出 `s`,挪到 `<leader>j`。`S` 仍为 flash-treesitter 选区。
 
+折叠 (treesitter 按语法, 默认全展开): `za` 切换 · `zc`/`zo` 关/开 · `zM`/`zR` 全折/全展 · `zj`/`zk` 跳折叠。Cursor 下折叠走 VSCode 原生 (treesitter 不加载), 键位由 vscode-neovim 映射。
+
 按 `<leader>` 由 which-key 弹出全部可用键。
 
 ## options / autocmds 要点
